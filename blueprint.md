@@ -70,3 +70,19 @@ Xây dựng một ứng dụng Flutter đa nền tảng (Android, iOS, Web) đ�
 3.  **Responsive:** Đảm bảo UI hoạt động tốt trên cả mobile và web.
 4.  **Kiểm tra lỗi:** Rà soát và sửa các lỗi phát sinh trong quá trình phát triển.
 5.  **Build và Deploy:** Hướng dẫn cách build ứng dụng cho các nền tảng.
+
+## Khắc phục sự cố
+
+*   **Vấn đề:** Sau khi đổi tên dự án từ `hanzi_writer_app` thành `myapp`, nhiều tệp vẫn còn sử dụng đường dẫn nhập cũ, gây ra lỗi build.
+*   **Giải pháp:**
+    *   Đã cập nhật `pubspec.yaml` để phản ánh tên gói mới.
+    *   Đã sửa các đường dẫn nhập không chính xác trong các tệp sau:
+        *   `lib/app/routes/app_pages.dart`
+        *   `lib/app/modules/auth/auth_binding.dart`
+        *   `lib/app/modules/auth/auth_screen.dart`
+        *   `lib/app/modules/home/home_binding.dart`
+        *   `lib/app/modules/home/home_screen.dart`
+        *   `lib/app/modules/splash/splash_binding.dart`
+        *   `lib/app/modules/splash/splash_screen.dart`
+        *   `lib/app/modules/auth/auth_controller.dart`
+        *   `lib/app/modules/splash/splash_controller.dart`

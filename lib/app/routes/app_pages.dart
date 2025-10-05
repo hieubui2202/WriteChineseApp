@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hanzi_writer_app/app/modules/auth/auth_binding.dart';
-import 'package:hanzi_writer_app/app/modules/auth/auth_screen.dart';
-import 'package:hanzi_writer_app/app/modules/splash/splash_binding.dart';
-import 'package:hanzi_writer_app/app/modules/splash/splash_screen.dart';
+import 'package:myapp/app/modules/auth/auth_binding.dart';
+import 'package:myapp/app/modules/auth/auth_screen.dart';
+import 'package:myapp/app/modules/splash/splash_binding.dart';
+import 'package:myapp/app/modules/splash/splash_screen.dart';
 import 'app_routes.dart';
 
 // Placeholder screens

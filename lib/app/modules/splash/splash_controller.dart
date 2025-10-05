@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:hanzi_writer_app/app/routes/app_routes.dart';
+import 'package:myapp/app/routes/app_routes.dart';
 
 class SplashController extends GetxController {
   @override

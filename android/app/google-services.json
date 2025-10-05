@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "392541474361",
+    "project_id": "writerchinese-587e1",
+    "storage_bucket": "writerchinese-587e1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:392541474361:android:34f4b8638bc41c32de87e8",
+        "android_client_info": {
+          "package_name": "com.example.myapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBlgXinZQxPzDIEAJsQNbhTH-5cWRhUeTc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hanzi_writer_app/app/modules/auth/auth_controller.dart';
+import 'package:myapp/app/modules/auth/auth_controller.dart';
 
 class AuthScreen extends GetView<AuthController> {
   const AuthScreen({super.key});
