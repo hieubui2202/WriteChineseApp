@@ -25,11 +25,21 @@ The importer expects the columns listed below. Columns not listed are ignored, s
 
 > 💡 The `strokeData.paths` column accepts the raw format from the sample row you provided. The importer will split the value on `|` and trim each segment into the array required by Firestore.
 
-## 3. Import to Firebase
+## 3. Install the import dependencies
+
+Create a Python virtual environment (optional but helpful for keeping tooling isolated) and install the Firebase importer requirements:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
+pip install -r tools/firebase/requirements.txt
+```
+
+## 4. Import to Firebase
 
 Run the importer as described in the [README](../README.md#importing-character-data-to-firebase). Hosted audio URLs (`ttsUrl`) are reused directly. When only `audioFileName` is supplied, the script uploads the matching file to `/audio/` in Firebase Storage and stores the resulting public URL in Firestore.
 
-## 4. Keep offline fallbacks in sync
+## 5. Keep offline fallbacks in sync
 
 Update [`assets/data/sample_characters.json`](../assets/data/sample_characters.json) with any new characters you want available when Firestore is empty (for example during development or for demo builds). You can copy/paste the row into the JSON structure following the existing schema:
 

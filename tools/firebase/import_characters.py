@@ -1,5 +1,8 @@
 """Utility script to import Hanzi data from Excel/JSON into Firebase Firestore & Storage.
 
+Setup:
+    pip install -r tools/firebase/requirements.txt
+
 Usage:
     python import_characters.py --excel characters.xlsx --service-account serviceAccount.json --bucket hanziapp.appspot.com
 
