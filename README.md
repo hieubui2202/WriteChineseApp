@@ -16,7 +16,8 @@ Duolingo-style Flutter application for practicing Chinese character handwriting 
 
 1. Install Flutter 3.19+ and run `flutter pub get`.
 2. Configure Firebase using the provided `lib/firebase_options.dart` or regenerate via the FlutterFire CLI.
-3. Enable Google and Anonymous providers in the Firebase console.
+3. Enable Google, Anonymous, and App Check providers in the Firebase console. For local testing, register your device or use the
+   automatically enabled debug provider (configured in `main.dart`).
 4. Run the app:
    ```bash
    flutter run

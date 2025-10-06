@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -12,6 +15,13 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  if (!kIsWeb) {
+    await FirebaseAppCheck.instance.activate(
+      androidProvider: kReleaseMode ? AndroidProvider.playIntegrity : AndroidProvider.debug,
+      appleProvider: kReleaseMode ? AppleProvider.deviceCheck : AppleProvider.debug,
+    );
+  }
+  await FirebaseAuth.instance.setLanguageCode('vi');
   runApp(const HanziTrainerApp());
 }
 
