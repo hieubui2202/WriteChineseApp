@@ -39,6 +39,23 @@ use cases they need while keeping layers decoupled and testable.
 
 Reference the sample hierarchy in [`tools/firebase/firestore_structure.md`](tools/firebase/firestore_structure.md). Use [`tools/firebase/import_characters.py`](tools/firebase/import_characters.py) to import Excel/JSON data and upload audio files to Firebase Storage.
 
+### Importing character data to Firebase
+
+1. **Prepare the Excel sheet** using the template columns described in the script header (`character`, `pinyin`, `meaning`, `audioFileName`, `strokeData.paths`, `strokeData.width`, `strokeData.height`, `unit`). Each row represents a character. The `strokeData.paths` column can contain a JSON array (e.g. `"[\"M 10 10 ...\"]"`).
+2. **Gather audio assets** in the same folder as the Excel file (or pass `--audio-dir` when running the script). The filename must match the `audioFileName` column.
+3. **Create a Firebase service account key** with Firestore and Storage permissions and download the JSON credentials file.
+4. **Run the importer** from the project root:
+   ```bash
+   python tools/firebase/import_characters.py \
+     --excel path/to/characters.xlsx \
+     --service-account path/to/serviceAccount.json \
+     --bucket your-project-id.appspot.com
+   ```
+   Add `--audio-dir path/to/audio` if the audio files are not alongside the spreadsheet.
+5. The script uploads audio files to `/audio/` in Firebase Storage, creates/updates documents in `/characters`, and ensures the referenced `/units/{unitId}` document lists each character. Review the console output for warnings about missing files.
+
+After importing, the mobile app will sync the Firestore data on launch. Use the bundled [`assets/data/sample_characters.json`](assets/data/sample_characters.json) for offline/local testing before your Firebase project is populated.
+
 ## Offline-ready data
 
 Bundled fallback data lives in [`assets/data/sample_characters.json`](assets/data/sample_characters.json), allowing the app to render content even before Firestore is populated.
