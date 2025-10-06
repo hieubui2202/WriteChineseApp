@@ -20,21 +20,43 @@ Dưới đây là ý nghĩa của từng nhóm cảnh báo/lỗi và cách xử 
 * **Cách khắc phục (tùy chọn)**: Gọi `FirebaseAuth.instance.setLanguageCode('vi');` sau khi khởi tạo Firebase hoặc bỏ qua nếu không cần localization.
 
 ## 2. `Error getting App Check token; using placeholder token instead`
-* **Nguyên nhân**: Đã bật Firebase App Check trong code nhưng chưa đăng ký provider hợp lệ (Debug/Play Integrity/SafetyNet). SDK phải fallback dùng placeholder token.
-* **Tác động**: Nếu App Check bắt buộc trong Firebase console, các request có thể bị từ chối. Nếu ở chế độ debug và App Check chưa enforced, request vẫn chạy.
-* **Cách khắc phục**:
-  - Đảm bảo đã thêm dependency `firebase_app_check` trong `pubspec.yaml` **và** các native dependency tương ứng trong `android/app/build.gradle.kts`:
+* **Nguyên nhân**: Đã bật Firebase App Check trong code nhưng native layer chưa có provider hợp lệ (Debug/Play Integrity/SafetyNet). Khi đó SDK không thể tạo token và phải fallback dùng placeholder.
+* **Tác động**: Nếu App Check được enforce trong Firebase console, mọi request Firestore/Storage sẽ bị từ chối. Ở chế độ phát triển, request vẫn chạy nhưng mất ý nghĩa của App Check.
+* **Cách khắc phục chi tiết**:
+  1. **Kiểm tra dependency Android**: đảm bảo `android/app/build.gradle.kts` đã có Play Integrity và Debug provider.
 
-    ```kotlin
-    dependencies {
-        implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
-        implementation("com.google.firebase:firebase-appcheck-playintegrity")
-        debugImplementation("com.google.firebase:firebase-appcheck-debug")
-    }
-    ```
+      ```kotlin
+      dependencies {
+          implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
+          implementation("com.google.firebase:firebase-appcheck-playintegrity")
+          debugImplementation("com.google.firebase:firebase-appcheck-debug")
+      }
+      ```
 
-  - Gọi `FirebaseAppCheck.instance.activate(...)` với provider phù hợp (ví dụ Debug provider trong `main.dart` cho quá trình phát triển, Play Integrity cho build phát hành).
-  - Đăng ký debug token trong Firebase Console nếu dùng Debug provider, hoặc tắt tạm App Check khi chưa cần enforce.
+      Sau khi chỉnh sửa, chạy `flutter clean` + `flutter pub get` để Gradle tải các gói mới.
+
+  2. **Kích hoạt App Check trên Firebase Console**:
+      * Vào **Build → App Check → Android apps**.
+      * Chọn app tương ứng (`google-services.json` ghi trong `android/app`), bật provider **Play Integrity** và bấm **Save**.
+      * Nếu đang test với bản debug, tạo thêm một **Debug token**. Firebase Console sẽ trả về giá trị chuỗi; thêm chuỗi này vào biến môi trường `FIREBASE_APPCHECK_DEBUG_TOKEN` hoặc đăng ký bằng CLI `firebase appcheck:debug --app <APP_ID> --token <TOKEN>`.
+
+  3. **Đảm bảo thiết bị có Google Play Services / Play Store**: Play Integrity chỉ hoạt động trên thiết bị/emulator có dịch vụ Google hợp lệ. Với emulator AOSP hoặc máy không có Play Store, sử dụng tạm Debug provider.
+
+  4. **Gọi App Check thật sớm trong `main.dart`**:
+
+      ```dart
+      await FirebaseAppCheck.instance.activate(
+        androidProvider: kReleaseMode ? AndroidProvider.playIntegrity : AndroidProvider.debug,
+        appleProvider: kReleaseMode ? AppleProvider.deviceCheck : AppleProvider.debug,
+      );
+      await FirebaseAppCheck.instance.setTokenAutoRefreshEnabled(true);
+      ```
+
+      Lệnh `setTokenAutoRefreshEnabled(true)` giúp SDK chủ động renew token tránh hết hạn.
+
+  5. **Kiểm tra log debug token**: Ở build debug, SDK sẽ in chuỗi token nếu chưa đăng ký. Sao chép token đó vào Firebase Console để whitelists.
+
+  6. **Nếu vẫn xuất hiện placeholder**: xóa app khỏi thiết bị, chạy lại để chắc chắn `google-services.json` mới được bundler lấy vào; đồng thời bảo đảm Firebase Console đã hiển thị trạng thái *Active* cho provider.
 
 ## 3. `avc: denied { open } ...` (SELinux audit)
 * **Nguyên nhân**: Thiết bị/emulator sử dụng SELinux ở chế độ `permissive`. Khi ứng dụng (với nhãn bảo mật `untrusted_app`) truy cập file hệ thống, SELinux ghi nhận và log lại.

@@ -22,6 +22,7 @@ Future<void> main() async {
         androidProvider: kReleaseMode ? AndroidProvider.playIntegrity : AndroidProvider.debug,
         appleProvider: kReleaseMode ? AppleProvider.deviceCheck : AppleProvider.debug,
       );
+      await FirebaseAppCheck.instance.setTokenAutoRefreshEnabled(true);
     } on MissingPluginException catch (error) {
       debugPrint('Firebase App Check plugin is unavailable: $error');
     } on PlatformException catch (error) {
