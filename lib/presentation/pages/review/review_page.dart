@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 
 import '../../controllers/review_controller.dart';
 import '../../controllers/progress_controller.dart';
-import '../../core/services/audio_service.dart';
+import '../../../core/services/audio_service.dart';
 
 class ReviewPage extends StatefulWidget {
   const ReviewPage({super.key});

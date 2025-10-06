@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import '../../controllers/auth_controller.dart';
 import '../../controllers/profile_controller.dart';
 import '../../controllers/progress_controller.dart';
-import '../../domain/usecases/sync_progress.dart';
+import '../../../domain/usecases/sync_progress.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
