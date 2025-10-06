@@ -37,7 +37,7 @@ use cases they need while keeping layers decoupled and testable.
 
 ## Firebase structure
 
-Reference the sample hierarchy in [`tools/firebase/firestore_structure.md`](tools/firebase/firestore_structure.md). Use [`tools/firebase/import_characters.py`](tools/firebase/import_characters.py) to import Excel/JSON data and upload audio files to Firebase Storage.
+Reference the sample hierarchy in [`tools/firebase/firestore_structure.md`](tools/firebase/firestore_structure.md). Nếu bạn cần hướng dẫn chi tiết bằng tiếng Việt (bao gồm thiết kế bảng Excel và ví dụ chữ "咖"), xem thêm [`docs/vi/thiet_ke_du_lieu_firebase.md`](docs/vi/thiet_ke_du_lieu_firebase.md). Use [`tools/firebase/import_characters.py`](tools/firebase/import_characters.py) to import Excel/JSON data and upload audio files to Firebase Storage.
 
 ### Importing character data to Firebase
 
