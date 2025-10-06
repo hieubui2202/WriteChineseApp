@@ -23,9 +23,18 @@ Dưới đây là ý nghĩa của từng nhóm cảnh báo/lỗi và cách xử 
 * **Nguyên nhân**: Đã bật Firebase App Check trong code nhưng chưa đăng ký provider hợp lệ (Debug/Play Integrity/SafetyNet). SDK phải fallback dùng placeholder token.
 * **Tác động**: Nếu App Check bắt buộc trong Firebase console, các request có thể bị từ chối. Nếu ở chế độ debug và App Check chưa enforced, request vẫn chạy.
 * **Cách khắc phục**:
-  - Đảm bảo đã thêm dependency `firebase_app_check` và gọi `FirebaseAppCheck.instance.activate(...)`.
-  - Cấu hình provider phù hợp (ví dụ Debug provider trong `main.dart` cho quá trình phát triển, Play Integrity/SafetyNet cho build phát hành).
-  - Hoặc tạm thời vô hiệu hoá App Check trên dự án Firebase nếu chưa cần.
+  - Đảm bảo đã thêm dependency `firebase_app_check` trong `pubspec.yaml` **và** các native dependency tương ứng trong `android/app/build.gradle.kts`:
+
+    ```kotlin
+    dependencies {
+        implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
+        implementation("com.google.firebase:firebase-appcheck-playintegrity")
+        debugImplementation("com.google.firebase:firebase-appcheck-debug")
+    }
+    ```
+
+  - Gọi `FirebaseAppCheck.instance.activate(...)` với provider phù hợp (ví dụ Debug provider trong `main.dart` cho quá trình phát triển, Play Integrity cho build phát hành).
+  - Đăng ký debug token trong Firebase Console nếu dùng Debug provider, hoặc tắt tạm App Check khi chưa cần enforce.
 
 ## 3. `avc: denied { open } ...` (SELinux audit)
 * **Nguyên nhân**: Thiết bị/emulator sử dụng SELinux ở chế độ `permissive`. Khi ứng dụng (với nhãn bảo mật `untrusted_app`) truy cập file hệ thống, SELinux ghi nhận và log lại.
