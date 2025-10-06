@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:myapp/app/modules/auth/auth_controller.dart';
+import 'package:lottie/lottie.dart';
+
+import '../../../ui/widgets/primary_button.dart';
+import 'auth_controller.dart';
 
 class AuthScreen extends GetView<AuthController> {
   const AuthScreen({super.key});
@@ -8,36 +11,60 @@ class AuthScreen extends GetView<AuthController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                'Welcome to Hanzi Writer',
-                style: Get.textTheme.titleLarge,
-              ),
-              const SizedBox(height: 50),
-              ElevatedButton(
-                onPressed: controller.signInWithGoogle,
-                child: const Text('Sign in with Google'),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  // TODO: Implement Email/Password Sign-In
-                },
-                child: const Text('Sign in with Email'),
-              ),
-              const SizedBox(height: 20),
-              TextButton(
-                onPressed: () {
-                  // TODO: Navigate to registration screen
-                },
-                child: const Text('Don\'t have an account? Sign up'),
-              ),
-            ],
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF121418), Color(0xFF090B0E)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 48),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  height: 220,
+                  child: Lottie.asset('assets/lottie/bear_wave.json'),
+                ),
+                const SizedBox(height: 32),
+                Text(
+                  'Hanzi Writing Trainer',
+                  style: Get.textTheme.headlineMedium?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  'Luyện viết chữ Hán kiểu Duolingo với âm thanh, stroke animation và bảng thành tích của bạn.',
+                  style: Get.textTheme.bodyLarge?.copyWith(color: Colors.white70),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 40),
+                PrimaryButton(
+                  label: 'Đăng nhập với Google',
+                  icon: Icons.g_mobiledata,
+                  onPressed: controller.signInWithGoogle,
+                ),
+                const SizedBox(height: 16),
+                PrimaryButton(
+                  label: 'Học thử ngay (Không cần tài khoản)',
+                  icon: Icons.bolt,
+                  onPressed: controller.signInAnonymously,
+                  variant: ButtonVariant.secondary,
+                ),
+                const SizedBox(height: 24),
+                Text(
+                  'Dữ liệu tiến độ sẽ được đồng bộ an toàn với Firebase và vẫn học được khi offline.',
+                  style: Get.textTheme.bodySmall?.copyWith(color: Colors.white60),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
           ),
         ),
       ),

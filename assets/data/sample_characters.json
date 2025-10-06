@@ -1,0 +1,86 @@
+{
+  "units": [
+    {
+      "id": "section1_unit1",
+      "title": "Food & Drinks",
+      "description": "Learn everyday ingredients and beverages.",
+      "characters": ["茶", "水", "饭", "汤"],
+      "color": "#00CFFF"
+    },
+    {
+      "id": "section1_unit2",
+      "title": "Greetings",
+      "description": "Say hello with confidence.",
+      "characters": ["你", "好", "谢", "吗"],
+      "color": "#FFD166"
+    }
+  ],
+  "characters": [
+    {
+      "character": "茶",
+      "pinyin": "chá",
+      "meaning": "trà / tea",
+      "ttsUrl": "https://firebasestorage.googleapis.com/v0/b/hanziapp.appspot.com/o/audio%2Fcha.mp3",
+      "strokeData": {
+        "width": 109,
+        "height": 109,
+        "paths": [
+          "M 20 20 L 90 20",
+          "M 55 20 L 55 80",
+          "M 35 45 L 75 45"
+        ]
+      },
+      "unit": "section1_unit1"
+    },
+    {
+      "character": "水",
+      "pinyin": "shuǐ",
+      "meaning": "nước / water",
+      "ttsUrl": "https://firebasestorage.googleapis.com/v0/b/hanziapp.appspot.com/o/audio%2Fshui.mp3",
+      "strokeData": {
+        "width": 109,
+        "height": 109,
+        "paths": [
+          "M 55 15 L 55 90",
+          "M 30 40 L 55 60",
+          "M 80 40 L 55 60",
+          "M 40 80 L 70 80"
+        ]
+      },
+      "unit": "section1_unit1"
+    },
+    {
+      "character": "饭",
+      "pinyin": "fàn",
+      "meaning": "cơm / rice",
+      "ttsUrl": "https://firebasestorage.googleapis.com/v0/b/hanziapp.appspot.com/o/audio%2Ffan.mp3",
+      "strokeData": {
+        "width": 109,
+        "height": 109,
+        "paths": [
+          "M 20 20 L 20 90",
+          "M 20 55 L 90 55",
+          "M 60 20 L 60 90"
+        ]
+      },
+      "unit": "section1_unit1"
+    },
+    {
+      "character": "汤",
+      "pinyin": "tāng",
+      "meaning": "súp / soup",
+      "ttsUrl": "https://firebasestorage.googleapis.com/v0/b/hanziapp.appspot.com/o/audio%2Ftang.mp3",
+      "strokeData": {
+        "width": 109,
+        "height": 109,
+        "paths": [
+          "M 20 20 L 20 90",
+          "M 20 50 L 90 50",
+          "M 60 20 L 60 90",
+          "M 35 35 L 80 80"
+        ]
+      },
+      "unit": "section1_unit1"
+    }
+  ]
+}

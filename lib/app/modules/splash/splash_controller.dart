@@ -1,19 +1,18 @@
 import 'package:get/get.dart';
-import 'package:myapp/app/routes/app_routes.dart';
 
 class SplashController extends GetxController {
+  final RxDouble progress = 0.0.obs;
+
   @override
-  void onReady() {
-    super.onReady();
-    _navigateToNextScreen();
+  void onInit() {
+    super.onInit();
+    _animateProgress();
   }
 
-  void _navigateToNextScreen() async {
-    // Simulate a delay for the splash screen
-    await Future.delayed(const Duration(seconds: 2));
-
-    // TODO: Implement authentication check here
-    // For now, we'll just navigate to the auth screen
-    Get.offAllNamed(Routes.AUTH);
+  Future<void> _animateProgress() async {
+    for (var i = 0; i <= 100; i += 5) {
+      await Future.delayed(const Duration(milliseconds: 40));
+      progress.value = i / 100;
+    }
   }
 }
