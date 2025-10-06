@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,10 +17,16 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   if (!kIsWeb) {
-    await FirebaseAppCheck.instance.activate(
-      androidProvider: kReleaseMode ? AndroidProvider.playIntegrity : AndroidProvider.debug,
-      appleProvider: kReleaseMode ? AppleProvider.deviceCheck : AppleProvider.debug,
-    );
+    try {
+      await FirebaseAppCheck.instance.activate(
+        androidProvider: kReleaseMode ? AndroidProvider.playIntegrity : AndroidProvider.debug,
+        appleProvider: kReleaseMode ? AppleProvider.deviceCheck : AppleProvider.debug,
+      );
+    } on MissingPluginException catch (error) {
+      debugPrint('Firebase App Check plugin is unavailable: $error');
+    } on PlatformException catch (error) {
+      debugPrint('Failed to activate Firebase App Check: ${error.code} ${error.message}');
+    }
   }
   await FirebaseAuth.instance.setLanguageCode('vi');
   runApp(const HanziTrainerApp());
