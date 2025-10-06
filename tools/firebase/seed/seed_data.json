@@ -1,0 +1,81 @@
+{
+  "characters": {
+    "茶": {
+      "hanzi": "茶",
+      "pinyin": "chá",
+      "meaning": "trà / tea",
+      "unitId": "section1_unit1",
+      "ttsUrl": "",
+      "strokeData": {
+        "width": 109,
+        "height": 109,
+        "paths": []
+      }
+    },
+    "水": {
+      "hanzi": "水",
+      "pinyin": "shuǐ",
+      "meaning": "nước / water",
+      "unitId": "section1_unit1",
+      "ttsUrl": "",
+      "strokeData": {
+        "width": 109,
+        "height": 109,
+        "paths": []
+      }
+    },
+    "饭": {
+      "hanzi": "饭",
+      "pinyin": "fàn",
+      "meaning": "cơm / rice",
+      "unitId": "section1_unit1",
+      "ttsUrl": "",
+      "strokeData": {
+        "width": 109,
+        "height": 109,
+        "paths": []
+      }
+    },
+    "汤": {
+      "hanzi": "汤",
+      "pinyin": "tāng",
+      "meaning": "súp / soup",
+      "unitId": "section1_unit1",
+      "ttsUrl": "",
+      "strokeData": {
+        "width": 109,
+        "height": 109,
+        "paths": []
+      }
+    }
+  },
+  "units": {
+    "section1_unit1": {
+      "title": "Food & Drinks",
+      "description": "Name food and drinks",
+      "order": 1,
+      "characters": ["茶", "水", "饭", "汤"],
+      "xpReward": 10
+    }
+  },
+  "users": {
+    "uid_demo": {
+      "displayName": "Demo User",
+      "email": "demo@example.com",
+      "avatarUrl": "",
+      "xp": 0,
+      "streakDays": 0,
+      "lastActive": null,
+      "progress": {
+        "section1_unit1": {
+          "茶": {
+            "completed": false,
+            "score": 0,
+            "mistakes": 0,
+            "lastReview": null
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hanzi Admin Console</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0d1117;
+        --panel: #111827;
+        --accent: #00cfff;
+        --text: #f3f4f6;
+        --muted: #9ca3af;
+        --danger: #f87171;
+        --success: #34d399;
+      }
+      * {
+        box-sizing: border-box;
+        font-family: 'Noto Sans', 'Noto Sans SC', system-ui, sans-serif;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: radial-gradient(circle at top, rgba(0, 207, 255, 0.08), transparent 60%),
+          var(--bg);
+        color: var(--text);
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        padding: 24px;
+      }
+      header {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        padding: 16px 24px;
+        background: rgba(17, 24, 39, 0.85);
+        border-radius: 16px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+      }
+      header h1 {
+        margin: 0;
+        font-size: 1.4rem;
+        letter-spacing: 0.04em;
+      }
+      header button {
+        padding: 10px 18px;
+        border-radius: 999px;
+        border: none;
+        cursor: pointer;
+        background: var(--accent);
+        color: #04121f;
+        font-weight: 600;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+      header button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 10px 24px rgba(0, 207, 255, 0.35);
+      }
+      main {
+        display: grid;
+        grid-template-columns: 1fr 1.2fr;
+        gap: 24px;
+      }
+      section {
+        background: rgba(17, 24, 39, 0.75);
+        border-radius: 20px;
+        padding: 24px;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+      }
+      section h2 {
+        margin-top: 0;
+        margin-bottom: 16px;
+        font-size: 1.1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+      }
+      form {
+        display: grid;
+        gap: 16px;
+      }
+      label {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+      }
+      input,
+      textarea,
+      select {
+        background: rgba(15, 23, 42, 0.85);
+        border: 1px solid rgba(0, 207, 255, 0.25);
+        color: var(--text);
+        padding: 12px 14px;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        transition: border 0.2s ease;
+      }
+      input:focus,
+      textarea:focus,
+      select:focus {
+        border-color: var(--accent);
+        outline: none;
+      }
+      textarea {
+        min-height: 96px;
+        resize: vertical;
+        line-height: 1.4;
+      }
+      .grid-2 {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 16px;
+      }
+      .actions {
+        display: flex;
+        gap: 16px;
+        justify-content: flex-end;
+      }
+      .btn-secondary {
+        background: transparent;
+        border: 1px solid rgba(148, 163, 184, 0.5);
+        color: var(--muted);
+      }
+      .btn-danger {
+        background: var(--danger);
+        color: white;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        padding: 12px 10px;
+        border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+        font-size: 0.92rem;
+      }
+      tbody tr {
+        cursor: pointer;
+        transition: background 0.2s ease;
+      }
+      tbody tr:hover {
+        background: rgba(0, 207, 255, 0.08);
+      }
+      .toolbar {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+      .toolbar input {
+        flex: 1;
+      }
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.8rem;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: rgba(0, 207, 255, 0.12);
+        color: var(--accent);
+      }
+      #toast {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        background: rgba(17, 24, 39, 0.9);
+        color: var(--text);
+        padding: 14px 20px;
+        border-radius: 12px;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(10px);
+        transition: opacity 0.25s ease, transform 0.25s ease;
+        border: 1px solid rgba(0, 207, 255, 0.25);
+      }
+      #toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      progress {
+        width: 100%;
+        height: 6px;
+        border-radius: 999px;
+        overflow: hidden;
+      }
+      progress::-webkit-progress-bar {
+        background: rgba(15, 23, 42, 0.8);
+      }
+      progress::-webkit-progress-value {
+        background: var(--accent);
+      }
+      @media (max-width: 1024px) {
+        main {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div>
+        <h1>Hanzi Admin Console</h1>
+        <div id="authStatus" class="tag">Signed out</div>
+      </div>
+      <div>
+        <button id="signInBtn">Sign in with Google</button>
+        <button id="signOutBtn" class="btn-secondary" style="display: none;">Sign out</button>
+      </div>
+    </header>
+    <main>
+      <section>
+        <h2>Characters</h2>
+        <div class="toolbar">
+          <input type="search" id="searchInput" placeholder="Search by Hanzi or pinyin" />
+          <button id="refreshBtn" class="btn-secondary">Refresh</button>
+        </div>
+        <div style="overflow: auto; max-height: 65vh;">
+          <table>
+            <thead>
+              <tr>
+                <th>Hanzi</th>
+                <th>Pinyin</th>
+                <th>Meaning</th>
+                <th>Unit</th>
+              </tr>
+            </thead>
+            <tbody id="characterRows"></tbody>
+          </table>
+        </div>
+        <div class="actions" style="margin-top: 12px;">
+          <button id="prevPageBtn" class="btn-secondary">Prev</button>
+          <button id="nextPageBtn" class="btn-secondary">Next</button>
+        </div>
+      </section>
+      <section>
+        <h2>Character Details</h2>
+        <form id="characterForm">
+          <div class="grid-2">
+            <label>
+              Hanzi (ID)
+              <input id="hanziInput" required maxlength="3" />
+            </label>
+            <label>
+              Unit ID
+              <input id="unitInput" placeholder="section1_unit1" required />
+            </label>
+          </div>
+          <div class="grid-2">
+            <label>
+              Pinyin
+              <input id="pinyinInput" placeholder="chá" required />
+            </label>
+            <label>
+              Meaning
+              <input id="meaningInput" placeholder="tea" required />
+            </label>
+          </div>
+          <label>
+            TTS URL
+            <input id="ttsUrlInput" placeholder="https://..." />
+          </label>
+          <label>
+            Audio upload (optional)
+            <input id="audioInput" type="file" accept="audio/mpeg,audio/mp3" />
+          </label>
+          <progress id="uploadProgress" value="0" max="1" style="display: none;"></progress>
+          <div class="grid-2">
+            <label>
+              Stroke width
+              <input id="strokeWidthInput" type="number" value="109" min="1" />
+            </label>
+            <label>
+              Stroke height
+              <input id="strokeHeightInput" type="number" value="109" min="1" />
+            </label>
+          </div>
+          <label>
+            Stroke paths (separate with |)
+            <textarea id="strokePathsInput" placeholder="M 20,20 ...|M 30,30 ..."></textarea>
+          </label>
+          <div class="actions">
+            <button type="button" id="resetBtn" class="btn-secondary">Clear</button>
+            <button type="submit">Save character</button>
+            <button type="button" id="deleteBtn" class="btn-danger">Delete</button>
+          </div>
+        </form>
+      </section>
+    </main>
+    <div id="toast"></div>
+    <script type="module">
+      import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+      import {
+        getAuth,
+        GoogleAuthProvider,
+        signInWithPopup,
+        signOut,
+        onAuthStateChanged
+      } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+      import {
+        getFirestore,
+        collection,
+        query,
+        orderBy,
+        limit,
+        startAfter,
+        getDocs,
+        doc,
+        getDoc,
+        setDoc,
+        deleteDoc,
+        serverTimestamp,
+        arrayUnion
+      } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+      import {
+        getStorage,
+        ref,
+        uploadBytesResumable,
+        getDownloadURL
+      } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js';
+
+      // TODO: Replace with your Firebase web config before deploying.
+      const firebaseConfig = {
+        apiKey: 'YOUR_API_KEY',
+        authDomain: 'YOUR_PROJECT.firebaseapp.com',
+        projectId: 'YOUR_PROJECT',
+        storageBucket: 'YOUR_PROJECT.appspot.com',
+        messagingSenderId: '0',
+        appId: '0:0:web:0'
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+      const storage = getStorage(app);
+
+      const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: 'select_account' });
+
+      const elements = {
+        signInBtn: document.getElementById('signInBtn'),
+        signOutBtn: document.getElementById('signOutBtn'),
+        authStatus: document.getElementById('authStatus'),
+        characterRows: document.getElementById('characterRows'),
+        searchInput: document.getElementById('searchInput'),
+        refreshBtn: document.getElementById('refreshBtn'),
+        prevPageBtn: document.getElementById('prevPageBtn'),
+        nextPageBtn: document.getElementById('nextPageBtn'),
+        form: document.getElementById('characterForm'),
+        hanzi: document.getElementById('hanziInput'),
+        unit: document.getElementById('unitInput'),
+        pinyin: document.getElementById('pinyinInput'),
+        meaning: document.getElementById('meaningInput'),
+        ttsUrl: document.getElementById('ttsUrlInput'),
+        audioInput: document.getElementById('audioInput'),
+        strokeWidth: document.getElementById('strokeWidthInput'),
+        strokeHeight: document.getElementById('strokeHeightInput'),
+        strokePaths: document.getElementById('strokePathsInput'),
+        uploadProgress: document.getElementById('uploadProgress'),
+        resetBtn: document.getElementById('resetBtn'),
+        deleteBtn: document.getElementById('deleteBtn')
+      };
+
+      let currentUser = null;
+      const pageCursors = [null];
+      let pageIndex = 0;
+      const PAGE_SIZE = 20;
+
+      const toast = (message, variant = 'info') => {
+        const toastEl = document.getElementById('toast');
+        toastEl.textContent = message;
+        toastEl.style.borderColor = variant === 'error' ? 'rgba(248, 113, 113, 0.6)' : 'rgba(0, 207, 255, 0.45)';
+        toastEl.classList.add('show');
+        setTimeout(() => toastEl.classList.remove('show'), 3500);
+      };
+
+      const updateAuthStatus = async (user) => {
+        if (!user) {
+          elements.authStatus.textContent = 'Signed out';
+          elements.authStatus.style.background = 'rgba(148, 163, 184, 0.12)';
+          elements.signInBtn.style.display = 'inline-flex';
+          elements.signOutBtn.style.display = 'none';
+          currentUser = null;
+          clearTable();
+          return;
+        }
+        const token = await user.getIdTokenResult();
+        const isAdmin = Boolean(token.claims && token.claims.admin);
+        currentUser = { ...user, isAdmin };
+        elements.authStatus.textContent = `${user.displayName || user.email} · ${isAdmin ? 'Admin' : 'No admin claim'}`;
+        elements.authStatus.style.background = isAdmin ? 'rgba(52, 211, 153, 0.18)' : 'rgba(248, 113, 113, 0.18)';
+        elements.signInBtn.style.display = 'none';
+        elements.signOutBtn.style.display = 'inline-flex';
+        if (!isAdmin) {
+          toast('Bạn cần admin claim để chỉnh sửa dữ liệu.', 'error');
+        } else {
+          await loadCharacters();
+        }
+      };
+
+      const clearTable = () => {
+        elements.characterRows.innerHTML = '';
+        pageIndex = 0;
+        pageCursors.length = 1;
+        pageCursors[0] = null;
+      };
+
+      const renderRows = (docs) => {
+        elements.characterRows.innerHTML = '';
+        docs.forEach((docSnap) => {
+          const data = docSnap.data();
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${data.hanzi || docSnap.id}</td>
+            <td>${data.pinyin || ''}</td>
+            <td>${data.meaning || ''}</td>
+            <td>${data.unitId || data.unit || ''}</td>
+          `;
+          tr.addEventListener('click', () => loadCharacterToForm(docSnap.id));
+          elements.characterRows.appendChild(tr);
+        });
+      };
+
+      const loadCharacters = async (direction) => {
+        if (!currentUser?.isAdmin) {
+          return;
+        }
+        const searchTerm = elements.searchInput.value.trim();
+        if (direction === 'next') {
+          if (!pageCursors[pageIndex + 1]) {
+            return;
+          }
+          pageIndex += 1;
+        } else if (direction === 'prev') {
+          pageIndex = Math.max(pageIndex - 1, 0);
+        } else {
+          pageIndex = 0;
+        }
+        const cursor = pageCursors[pageIndex];
+        let baseQuery = cursor
+          ? query(collection(db, 'characters'), orderBy('hanzi'), startAfter(cursor), limit(PAGE_SIZE))
+          : query(collection(db, 'characters'), orderBy('hanzi'), limit(PAGE_SIZE));
+        const snapshot = await getDocs(baseQuery);
+        if (!snapshot.docs.length && direction === 'next') {
+          // No further pages; revert the index and disable the next button.
+          pageCursors.length = pageIndex + 1;
+          pageIndex = Math.max(pageIndex - 1, 0);
+          elements.nextPageBtn.disabled = true;
+          elements.prevPageBtn.disabled = pageIndex === 0;
+          return;
+        }
+        let docs = snapshot.docs;
+        if (searchTerm) {
+          const lower = searchTerm.toLowerCase();
+          docs = docs.filter((docSnap) => {
+            const data = docSnap.data();
+            return (
+              (data.hanzi || '').includes(searchTerm) ||
+              (data.pinyin || '').toLowerCase().includes(lower) ||
+              (data.meaning || '').toLowerCase().includes(lower)
+            );
+          });
+        }
+        renderRows(docs);
+        const lastDoc = snapshot.docs.at(-1) || null;
+        if (lastDoc) {
+          pageCursors[pageIndex + 1] = lastDoc;
+        } else {
+          pageCursors.length = pageIndex + 1;
+        }
+        elements.prevPageBtn.disabled = pageIndex === 0;
+        elements.nextPageBtn.disabled = !pageCursors[pageIndex + 1];
+      };
+
+      const loadCharacterToForm = async (hanziId) => {
+        const docRef = doc(db, 'characters', hanziId);
+        const snapshot = await getDoc(docRef);
+        if (!snapshot.exists()) {
+          toast('Không tìm thấy ký tự.', 'error');
+          return;
+        }
+        const data = snapshot.data();
+        elements.hanzi.value = snapshot.id;
+        elements.unit.value = data.unitId || data.unit || '';
+        elements.pinyin.value = data.pinyin || '';
+        elements.meaning.value = data.meaning || '';
+        elements.ttsUrl.value = data.ttsUrl || '';
+        elements.strokeWidth.value = data.strokeData?.width || 109;
+        elements.strokeHeight.value = data.strokeData?.height || 109;
+        const paths = Array.isArray(data.strokeData?.paths) ? data.strokeData.paths.join(' | ') : '';
+        elements.strokePaths.value = paths;
+      };
+
+      const parseStrokePaths = (raw) => {
+        if (!raw) return [];
+        return raw
+          .split('|')
+          .map((segment) => segment.trim())
+          .filter(Boolean);
+      };
+
+      const uploadAudioIfNeeded = (hanziId) => {
+        const file = elements.audioInput.files?.[0];
+        if (!file) return null;
+        const storageRef = ref(storage, `audio/${hanziId}.mp3`);
+        const uploadTask = uploadBytesResumable(storageRef, file);
+        elements.uploadProgress.style.display = 'block';
+        elements.uploadProgress.value = 0;
+        return new Promise((resolve, reject) => {
+          uploadTask.on(
+            'state_changed',
+            (snapshot) => {
+              const progress = snapshot.bytesTransferred / snapshot.totalBytes;
+              elements.uploadProgress.value = progress;
+            },
+            (err) => {
+              elements.uploadProgress.style.display = 'none';
+              reject(err);
+            },
+            async () => {
+              elements.uploadProgress.style.display = 'none';
+              const url = await getDownloadURL(uploadTask.snapshot.ref);
+              resolve(url);
+            }
+          );
+        });
+      };
+
+      elements.form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        if (!currentUser?.isAdmin) {
+          toast('Bạn không có quyền ghi dữ liệu.', 'error');
+          return;
+        }
+        const hanziId = elements.hanzi.value.trim();
+        if (!hanziId) {
+          toast('Hanzi là bắt buộc.', 'error');
+          return;
+        }
+        try {
+          const docRef = doc(db, 'characters', hanziId);
+          const existingSnap = await getDoc(docRef);
+          let ttsUrl = elements.ttsUrl.value.trim();
+          const uploadedUrl = await uploadAudioIfNeeded(hanziId);
+          if (uploadedUrl) {
+            ttsUrl = uploadedUrl;
+            elements.ttsUrl.value = ttsUrl;
+          }
+          const payload = {
+            hanzi: hanziId,
+            unitId: elements.unit.value.trim(),
+            pinyin: elements.pinyin.value.trim(),
+            meaning: elements.meaning.value.trim(),
+            ttsUrl,
+            strokeData: {
+              width: Number(elements.strokeWidth.value) || 109,
+              height: Number(elements.strokeHeight.value) || 109,
+              paths: parseStrokePaths(elements.strokePaths.value)
+            },
+            updatedAt: serverTimestamp()
+          };
+          if (!payload.strokeData.paths.length) {
+            delete payload.strokeData.paths;
+          }
+          if (!existingSnap.exists()) {
+            payload.createdAt = serverTimestamp();
+          }
+          await setDoc(docRef, payload, { merge: true });
+          // Ensure unit roster is up to date
+          const unitRef = doc(db, 'units', payload.unitId);
+          await setDoc(
+            unitRef,
+            {
+              characters: arrayUnion(hanziId),
+              updatedAt: serverTimestamp()
+            },
+            { merge: true }
+          );
+          toast('Đã lưu ký tự thành công.', 'success');
+          await loadCharacters();
+        } catch (error) {
+          console.error(error);
+          toast('Lưu thất bại. Kiểm tra console.', 'error');
+        }
+      });
+
+      elements.resetBtn.addEventListener('click', () => {
+        elements.form.reset();
+        elements.strokeWidth.value = 109;
+        elements.strokeHeight.value = 109;
+        elements.uploadProgress.style.display = 'none';
+      });
+
+      elements.deleteBtn.addEventListener('click', async () => {
+        if (!currentUser?.isAdmin) {
+          toast('Bạn không có quyền xóa.', 'error');
+          return;
+        }
+        const hanziId = elements.hanzi.value.trim();
+        if (!hanziId) {
+          toast('Chọn ký tự cần xóa.', 'error');
+          return;
+        }
+        if (!confirm(`Xóa ký tự ${hanziId}?`)) {
+          return;
+        }
+        try {
+          await deleteDoc(doc(db, 'characters', hanziId));
+          toast(`Đã xóa ${hanziId}.`, 'success');
+          elements.form.reset();
+          await loadCharacters();
+        } catch (error) {
+          console.error(error);
+          toast('Không thể xóa ký tự.', 'error');
+        }
+      });
+
+      elements.refreshBtn.addEventListener('click', () => loadCharacters());
+      elements.nextPageBtn.addEventListener('click', () => loadCharacters('next'));
+      elements.prevPageBtn.addEventListener('click', () => loadCharacters('prev'));
+      elements.searchInput.addEventListener('input', () => loadCharacters());
+
+      elements.signInBtn.addEventListener('click', async () => {
+        try {
+          await signInWithPopup(auth, provider);
+        } catch (error) {
+          console.error(error);
+          toast('Đăng nhập thất bại.', 'error');
+        }
+      });
+
+      elements.signOutBtn.addEventListener('click', async () => {
+        await signOut(auth);
+      });
+
+      onAuthStateChanged(auth, (user) => {
+        updateAuthStatus(user);
+      });
+    </script>
+  </body>
+</html>
