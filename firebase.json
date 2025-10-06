@@ -1,1 +1,50 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"writerchinese-587e1","appId":"1:392541474361:android:34f4b8638bc41c32de87e8","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"writerchinese-587e1","configurations":{"android":"1:392541474361:android:34f4b8638bc41c32de87e8","ios":"1:392541474361:ios:f15ec93df7dd3f0fde87e8","web":"1:392541474361:web:d6591a224345b5a0de87e8"}}}}}}
+{
+  "functions": {
+    "source": "functions",
+    "runtime": "nodejs20",
+    "ignore": [
+      "node_modules",
+      ".git",
+      ".firebase"
+    ]
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "storage": {
+    "rules": "storage.rules"
+  },
+  "hosting": [
+    {
+      "target": "app",
+      "public": "web",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "predeploy": [
+        "node tools/firebase/copy_admin_console.mjs"
+      ],
+      "headers": [
+        {
+          "source": "**/*.@(js|css|png|jpg|jpeg|svg|webp|json)",
+          "headers": [
+            { "key": "Cache-Control", "value": "public,max-age=604800,immutable" }
+          ]
+        },
+        {
+          "source": "_admin/**",
+          "headers": [
+            { "key": "Cache-Control", "value": "no-store" },
+            { "key": "X-Robots-Tag", "value": "noindex" }
+          ]
+        }
+      ],
+      "rewrites": [
+        { "source": "_admin/**", "destination": "_admin/index.html" }
+      ]
+    }
+  ]
+}

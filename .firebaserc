@@ -1,0 +1,19 @@
+{
+  "projects": {
+    "default": "hanzi-writing-trainer",
+    "production": "hanzi-writing-trainer",
+    "development": "hanzi-writing-trainer-dev"
+  },
+  "targets": {
+    "hanzi-writing-trainer": {
+      "hosting": {
+        "app": ["hanzi-writing-trainer"]
+      }
+    },
+    "hanzi-writing-trainer-dev": {
+      "hosting": {
+        "app": ["hanzi-writing-trainer-dev"]
+      }
+    }
+  }
+}

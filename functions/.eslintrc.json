@@ -1,0 +1,10 @@
+{
+  "extends": ["google"],
+  "parserOptions": {
+    "ecmaVersion": 2022
+  },
+  "rules": {
+    "quotes": ["error", "single"],
+    "require-jsdoc": "off"
+  }
+}

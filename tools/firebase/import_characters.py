@@ -7,7 +7,7 @@ Usage:
     python import_characters.py --excel characters.xlsx --service-account serviceAccount.json --bucket hanziapp.appspot.com
 
 The Excel file should contain the columns:
-    character | pinyin | meaning | audioFileName | strokeData.paths | strokeData.width | strokeData.height | unit
+    character | pinyin | meaning | audioFileName | ttsUrl | strokeData.paths | strokeData.width | strokeData.height | unitId
 
 The script will:
   * Upload audio files from the same folder to Firebase Storage under /audio/
@@ -69,7 +69,21 @@ def update_unit_characters(db: firestore.Client, unit_id: str, character_id: str
         characters = [str(c) for c in data.get("characters", [])]
     if character_id not in characters:
         characters.append(character_id)
-    unit_ref.set({"characters": characters}, merge=True)
+    payload = {
+        "characters": characters,
+        "updatedAt": firestore.SERVER_TIMESTAMP,
+    }
+    if not unit_snapshot.exists:
+        payload.update(
+            {
+                "title": "Pending title",
+                "description": "",
+                "order": 0,
+                "xpReward": 10,
+                "createdAt": firestore.SERVER_TIMESTAMP,
+            }
+        )
+    unit_ref.set(payload, merge=True)
 
 
 def main() -> None:
@@ -89,7 +103,7 @@ def main() -> None:
             continue
         pinyin = str(row.get("pinyin", "")).strip()
         meaning = str(row.get("meaning", "")).strip()
-        unit = str(row.get("unit", "")).strip() or "section1_unit1"
+        unit_id = str(row.get("unitId", row.get("unit", ""))).strip() or "section1_unit1"
         audio_file = str(row.get("audioFileName", "")).strip()
         provided_tts = str(
             row.get("ttsUrl", row.get("audioUrl", ""))
@@ -122,6 +136,7 @@ def main() -> None:
             print(f"[warn] no audio provided for {character}; leaving ttsUrl empty")
 
         char_doc = {
+            "hanzi": character,
             "character": character,
             "pinyin": pinyin,
             "meaning": meaning,
@@ -131,10 +146,12 @@ def main() -> None:
                 "height": height,
                 "paths": paths,
             },
-            "unit": unit,
+            "unitId": unit_id,
+            "createdAt": firestore.SERVER_TIMESTAMP,
+            "updatedAt": firestore.SERVER_TIMESTAMP,
         }
         db.collection("characters").document(character).set(char_doc, merge=True)
-        update_unit_characters(db, unit, character)
+        update_unit_characters(db, unit_id, character)
         print(f"Imported {character} ({pinyin})")
 
     print("✅ Import completed!")

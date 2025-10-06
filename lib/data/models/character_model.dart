@@ -15,21 +15,22 @@ class CharacterModel extends Character {
   factory CharacterModel.fromMap(Map<String, dynamic> data, String id) {
     return CharacterModel(
       id: id,
-      character: data['character']?.toString() ?? id,
+      character: (data['hanzi'] ?? data['character'] ?? id).toString(),
       pinyin: data['pinyin']?.toString() ?? '',
       meaning: data['meaning']?.toString() ?? '',
       ttsUrl: data['ttsUrl']?.toString() ?? '',
       strokeData: StrokeDataModel.fromMap((data['strokeData'] as Map<String, dynamic>? ?? {})),
-      unitId: data['unit']?.toString() ?? '',
+      unitId: (data['unitId'] ?? data['unit'] ?? '').toString(),
     );
   }
 
   Map<String, dynamic> toMap() => {
+        'hanzi': character,
         'character': character,
         'pinyin': pinyin,
         'meaning': meaning,
         'ttsUrl': ttsUrl,
         'strokeData': (strokeData as StrokeDataModel).toMap(),
-        'unit': unitId,
+        'unitId': unitId,
       };
 }
