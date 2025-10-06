@@ -56,6 +56,13 @@ Reference the sample hierarchy in [`tools/firebase/firestore_structure.md`](tool
 
 After importing, the mobile app will sync the Firestore data on launch. Use the bundled [`assets/data/sample_characters.json`](assets/data/sample_characters.json) for offline/local testing before your Firebase project is populated.
 
+### Where to store your source spreadsheet/JSON
+
+- Keep your master spreadsheet or JSON exports inside [`tools/firebase/datasets/`](tools/firebase/datasets/) so they travel with the project (the folder ships with a `.gitkeep` placeholder). See [`docs/data_preparation.md`](docs/data_preparation.md) for a detailed walkthrough.
+- Each row can look like the sample you shared (`咖 | 咖啡 | coffee | kāfēi | …`). Map the columns to the importer template and, for stroke paths separated by `|`, the importer will automatically split them into an array.
+- If you already have hosted audio, fill the `ttsUrl` column and the importer will reuse it instead of uploading a local file. Otherwise place the audio file alongside the spreadsheet and populate `audioFileName`.
+- Duplicate any new characters into [`assets/data/sample_characters.json`](assets/data/sample_characters.json) when you want them available for offline testing in debug builds.
+
 ## Offline-ready data
 
 Bundled fallback data lives in [`assets/data/sample_characters.json`](assets/data/sample_characters.json), allowing the app to render content even before Firestore is populated.

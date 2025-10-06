@@ -88,21 +88,35 @@ def main() -> None:
         meaning = str(row.get("meaning", "")).strip()
         unit = str(row.get("unit", "")).strip() or "section1_unit1"
         audio_file = str(row.get("audioFileName", "")).strip()
+        provided_tts = str(
+            row.get("ttsUrl", row.get("audioUrl", ""))
+        ).strip()
         width = int(row.get("strokeData.width", 109))
         height = int(row.get("strokeData.height", 109))
         raw_paths = row.get("strokeData.paths", "[]")
+        paths: List[str]
         if isinstance(raw_paths, str):
-            paths = json.loads(raw_paths)
+            stripped = raw_paths.strip()
+            if not stripped:
+                paths = []
+            elif stripped.startswith("["):
+                paths = json.loads(stripped)
+            elif "|" in stripped:
+                paths = [segment.strip() for segment in stripped.split("|") if segment.strip()]
+            else:
+                paths = [line.strip() for line in stripped.splitlines() if line.strip()]
         else:
             paths = [str(p) for p in raw_paths if str(p).strip()]
 
-        tts_url = ""
+        tts_url = provided_tts
         if audio_file:
             audio_path = audio_dir / audio_file
             if audio_path.exists():
                 tts_url = upload_audio(bucket, audio_path)
             else:
                 print(f"[warn] audio file not found for {character}: {audio_path}")
+        elif not tts_url:
+            print(f"[warn] no audio provided for {character}; leaving ttsUrl empty")
 
         char_doc = {
             "character": character,
