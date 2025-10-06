@@ -4,7 +4,8 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'firebase_options.dart';
-import 'app/routes/app_pages.dart';
+import 'presentation/bindings/app_binding.dart';
+import 'presentation/routes/app_pages.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -57,7 +58,8 @@ class HanziTrainerApp extends StatelessWidget {
           ),
         ),
       ),
-      initialRoute: AppPages.INITIAL,
+      initialRoute: AppPages.initial,
+      initialBinding: AppBinding(),
       getPages: AppPages.routes,
     );
   }

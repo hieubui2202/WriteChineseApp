@@ -22,6 +22,18 @@ Duolingo-style Flutter application for practicing Chinese character handwriting 
    flutter run
    ```
 
+## Architecture
+
+The app follows a GetX-powered clean architecture split into layered packages:
+
+- `domain/` — Entities, repository contracts, and use cases describing the business rules.
+- `data/` — Firebase/Storage/SharedPreferences implementations that fulfill the domain repositories.
+- `presentation/` — GetX controllers, bindings, and UI pages (plus reusable widgets in `presentation/widgets`).
+- `core/` — Cross-cutting helpers such as the shared audio service.
+
+Global dependencies are wired through `presentation/bindings/app_binding.dart`, ensuring controllers receive only the
+use cases they need while keeping layers decoupled and testable.
+
 ## Firebase structure
 
 Reference the sample hierarchy in [`tools/firebase/firestore_structure.md`](tools/firebase/firestore_structure.md). Use [`tools/firebase/import_characters.py`](tools/firebase/import_characters.py) to import Excel/JSON data and upload audio files to Firebase Storage.
