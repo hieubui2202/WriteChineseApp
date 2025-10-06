@@ -7,7 +7,7 @@ Duolingo-style Flutter application for practicing Chinese character handwriting 
 - 🔐 Google & anonymous authentication with Firebase Auth
 - ☁️ Firestore persistence for XP, streak, and per-character progress (offline cache with `SharedPreferences`)
 - 🔊 Audio playback from Firebase Storage and bundled fallbacks
-- ✍️ Stroke-by-stroke writing practice powered by [`hanzi_writer`](https://pub.dev/packages/hanzi_writer)
+- ✍️ Stroke-by-stroke writing practice with a custom animated canvas
 - 🧠 Five-step lesson flow: intro → listen → meaning → writing → missing stroke → result
 - 📚 Flashcard review of mastered characters
 - 🌐 `web/preview.html` for a quick static preview of the Duolingo-inspired layout

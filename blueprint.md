@@ -21,7 +21,7 @@ Xây dựng một ứng dụng Flutter đa nền tảng (Android, iOS, Web) đ�
 - **Quản lý state:** GetX
 - **Gói & thư viện:**
   - `firebase_core`, `firebase_auth`, `cloud_firestore`, `google_sign_in`
-  - `hanzi_writer` (cho việc luyện viết)
+  - Canvas tuỳ chỉnh cho luyện viết
   - `get` (quản lý state và navigation)
   - `shared_preferences` (lưu trữ cục bộ)
   - `lottie` (animations)
@@ -60,7 +60,7 @@ Xây dựng một ứng dụng Flutter đa nền tảng (Android, iOS, Web) đ�
 2.  **Firebase Service:** Viết các hàm để tương tác với Firestore (đọc/ghi dữ liệu).
 3.  **Authentication Service:** Xử lý logic đăng nhập, đăng xuất, và quản lý session.
 4.  **GetX Controllers:** Tạo controller cho từng màn hình để quản lý state và business logic.
-5.  **Tích hợp `hanzi_writer`:** Cấu hình canvas luyện viết và logic kiểm tra stroke.
+5.  **Xây dựng canvas luyện viết tuỳ chỉnh:** Cấu hình canvas tương tác và logic kiểm tra stroke.
 6.  **Nạp dữ liệu:** Viết hàm để đọc dữ liệu từ file JSON trong assets và hiển thị ra UI.
 
 ### Giai đoạn 4: Hoàn thiện và kiểm thử

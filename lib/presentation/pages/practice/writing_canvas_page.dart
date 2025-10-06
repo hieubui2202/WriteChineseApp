@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hanzi_writer/hanzi_writer.dart';
-
 import '../../controllers/practice_controller.dart';
+import '../../widgets/hanzi_stroke_canvas.dart';
 import 'missing_stroke_page.dart';
 
 class WritingCanvasPage extends StatefulWidget {
@@ -16,12 +15,14 @@ class WritingCanvasPage extends StatefulWidget {
 
 class _WritingCanvasPageState extends State<WritingCanvasPage> {
   late PracticeController controller;
-  bool success = false;
+  bool _hasNavigated = false;
+  late final GlobalKey<HanziStrokeCanvasState> _canvasKey;
 
   @override
   void initState() {
     super.initState();
     controller = Get.find(tag: widget.controllerTag);
+    _canvasKey = GlobalKey<HanziStrokeCanvasState>();
   }
 
   @override
@@ -40,18 +41,46 @@ class _WritingCanvasPageState extends State<WritingCanvasPage> {
             const SizedBox(height: 24),
             if (character != null)
               Expanded(
-                child: HanziWriter(
-                  character: character.character,
-                  width: 320,
-                  height: 320,
-                  showCharacter: true,
-                  onCorrectStroke: (_) {
-                    setState(() => success = true);
-                  },
-                  onComplete: () {
-                    controller.completeWriting(success: success);
-                    Get.off(() => MissingStrokePage(controllerTag: widget.controllerTag));
-                  },
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(24),
+                        child: Container(
+                          color: const Color(0xFF1A1D24),
+                          child: HanziStrokeCanvas(
+                            key: _canvasKey,
+                            strokePaths: character.strokeData.paths,
+                            designWidth: character.strokeData.width,
+                            designHeight: character.strokeData.height,
+                            onCompleted: _handleCompletion,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Vẽ theo nét gợi ý. Hoàn thành đủ số nét để tiếp tục.',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        OutlinedButton.icon(
+                          onPressed: () => _canvasKey.currentState?.resetCanvas(),
+                          icon: const Icon(Icons.refresh),
+                          label: const Text('Làm lại'),
+                        ),
+                        const SizedBox(width: 16),
+                        TextButton(
+                          onPressed: () => _handleCompletion(false),
+                          child: const Text('Bỏ qua'),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               )
             else
@@ -60,5 +89,12 @@ class _WritingCanvasPageState extends State<WritingCanvasPage> {
         ),
       ),
     );
+  }
+
+  void _handleCompletion(bool success) {
+    if (_hasNavigated) return;
+    _hasNavigated = true;
+    controller.completeWriting(success: success);
+    Get.off(() => MissingStrokePage(controllerTag: widget.controllerTag));
   }
 }
